@@ -32,8 +32,15 @@ class SakuraServer
   def init_instance_variable(params)
 
     #インスタンス作成
-    
-    send_request('get', '', '')
+    puts "Create a server for #{@name}."
+
+    params = {
+      :Zone => @zone, :ServerPlan => @plan, :Name => @name, 
+      :Description => @description, :Tags => @tags
+    }
+
+    send_request('post', 'server', create_endpoint('server'), params)
+
   end
 
 
