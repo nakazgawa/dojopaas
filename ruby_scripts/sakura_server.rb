@@ -2,6 +2,8 @@
 
 class SakuraServer
 
+  require 'httpclient'
+
   # jsのserver.createで使っているフィールドを参考
   def initialize(zone:0, plan:nil, packetfilterid:nil, name:nil, description:nil, tags:nil, pubkey:nil, disk:nil, resolve:nil, notes:nil)
       @zone           = zone
@@ -14,6 +16,8 @@ class SakuraServer
       @disk           = disk
       @resolve        = resolve
       @notes          = notes
+
+      @client = HTTPClient.new
   end
 
   # server.createに対応
@@ -26,7 +30,17 @@ class SakuraServer
   # createとdestroyで独自に引数を取れるようにしておく
   def init_instance_variable(params)
 
+      #インスタンス作成
+      
+      send_request('get', '', '')
   end
+
+
+  def send_request(http_method,endpoint,query)
+      @client.send(lc(http_method),endpoint,query)
+  end
+  #def check_parameters
+  #end
 end
 
 
