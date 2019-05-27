@@ -2,7 +2,7 @@
 
 class SakuraServer
 
-  require 'httpclient'
+  require 'jsonclient'
 
   SAKURA_BASE_URL     = 'https://secure.sakura.ad.jp/cloud/zone'
   SAKURA_ZONE_ID      = 'is1b'
@@ -26,7 +26,7 @@ class SakuraServer
     @resolve        = resolve
     @notes          = notes
 
-    @client = HTTPClient.new
+    @client = JSONClient.new
     @client.set_proxy_auth(SAKURA_TOKEN, SAKURA_TOKEN_SECRET)
   end
 
@@ -50,15 +50,17 @@ class SakuraServer
         :Description => @description, :Tags => @tags
       }
     }
-    send_request('post','server', params)
+    result = send_request('post','server', params)
+    @server_id =  ''
   end
 
   #ネットワークインターフェイスの作成
   def create_network_interface(params = nil)
     params = {
-      :Server => {
-        :Zone => @zone, :ServerPlan => @plan, :Name => @name,
-        :Description => @description, :Tags => @tags
+      :interface => {
+        :Server => {
+          :ID => @server_id
+        }
       }
     }
     send_request('post', 'interface', params)
