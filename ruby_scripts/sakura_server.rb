@@ -69,7 +69,7 @@ class SakuraServer
   # 実際に送信する
   def send_request(http_method,path,query)
     endpoint = create_endpoint(path)
-    @client.send(http_method,endpoint,query)
+    @client.send(http_method,endpoint,:query => query)
   end
 end
 
