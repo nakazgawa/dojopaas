@@ -3,6 +3,7 @@
 class SakuraServer
 
   require 'httpclient'
+  require 'pry'
 
   SAKURA_BASE_URL     = 'https://secure.sakura.ad.jp/cloud/zone'
   SAKURA_ZONE_ID      = 'is1b'
@@ -32,7 +33,7 @@ class SakuraServer
 
   # server.createに対応
   # 引数があると、オブジェクトの状態を変えつつそちらを使う
-  def create(server_params)
+  def create(server_params = nil)
     create_server_instance()
     create_network_interface()
   end
@@ -42,24 +43,28 @@ class SakuraServer
   # createとdestroyで独自に引数を取れるようにしておく
 
   #インスタンス作成
-  def create_server_instance(params)
+  def create_server_instance(params = nil)
     puts "Create a server for #{@name}."
     params = {
-      :Zone => @zone, :ServerPlan => @plan, :Name => @name,
-      :Description => @description, :Tags => @tags
+      :Server => {
+        :Zone => @zone, :ServerPlan => @plan, :Name => @name,
+        :Description => @description, :Tags => @tags
+      }
     }
-    send_request('post', 'server', 'server', params)
+    binding.pry
+    send_request('post','server', params)
   end
 
   #ネットワークインターフェイスの作成
-  def create_network_interface(params)
+  def create_network_interface(params = nil)
     params = {
-      :Zone => @zone, :ServerPlan => @plan, :Name => @name, 
-      :Description => @description, :Tags => @tags
+      :Server => {
+        :Zone => @zone, :ServerPlan => @plan, :Name => @name,
+        :Description => @description, :Tags => @tags
+      }
     }
-    send_request('post', 'server', 'server', params)
+    send_request('post', 'interface', params)
   end
-
 
   # URI(エンドポイント)を作成する
   def create_endpoint(path)
@@ -80,6 +85,5 @@ end
 # おそらくclassの部分は切り貼りし、mainは実際には使わないのでテスト実装
 
 sakura =  SakuraServer.new(zone: 5, tags:"test")
-
+sakura.create()
 #sakura.create() <- createする際はこれを呼び出す
-
