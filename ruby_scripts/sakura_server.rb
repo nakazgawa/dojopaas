@@ -26,37 +26,50 @@ class SakuraServer
     @notes          = notes
 
     @client = HTTPClient.new
+    @client.set_proxy_auth(SAKURA_TOKEN, SAKURA_TOKEN_SECRET)
   end
 
   # server.createに対応
   # 引数があると、オブジェクトの状態を変えつつそちらを使う
   def create(server_params)
-
+    create_server_instance()
+    create_network_interface()
   end
 
   private
 
   # createとdestroyで独自に引数を取れるようにしておく
-  def init_instance_variable(params)
 
-    #インスタンス作成
+  #インスタンス作成
+  def create_server_instance(params)
     puts "Create a server for #{@name}."
+    params = {
+      :Zone => @zone, :ServerPlan => @plan, :Name => @name,
+      :Description => @description, :Tags => @tags
+    }
+    send_request('post', 'server', 'server', params)
+  end
 
+  #ネットワークインターフェイスの作成
+  def create_network_interface(params)
     params = {
       :Zone => @zone, :ServerPlan => @plan, :Name => @name, 
       :Description => @description, :Tags => @tags
     }
-
-    send_request('post', 'server', create_endpoint('server'), params)
-
+    send_request('post', 'server', 'server', params)
   end
 
 
-  def send_request(http_method,endpoint,query)
-    @client.send(lc(http_method),endpoint,query)
+  # URI(エンドポイント)を作成する
+  def create_endpoint(path)
+    "#{SAKURA_BASE_URL}/#{SAKURA_ZONE_ID}/#{SAKURA_CLOUD_SUFFIX}/#{SAKURA_API_VERSION}/#{path}"
   end
-  #def check_parameters
-  #end
+
+  # 実際に送信する
+  def send_request(http_method,path,query)
+    endpoint = create_endpoint(path)
+    @client.send(http_method,endpoint,query)
+  end
 end
 
 
