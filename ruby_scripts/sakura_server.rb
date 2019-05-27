@@ -13,7 +13,8 @@ class SakuraServer
   SAKURA_TOKEN_SECRET = ENV['SAKURA_TOKEN_SECRET'].fetch
 
   # jsのserver.createで使っているフィールドを参考
-  def initialize(zone:0, plan:nil, packetfilterid:nil, name:nil, description:nil, tags:nil, pubkey:nil, disk:nil, resolve:nil, notes:nil)
+  def initialize(zone:0, plan:nil, packetfilterid:nil, name:nil, description:nil, 
+                 tags:nil, pubkey:nil, disk:nil, resolve:nil, notes:nil)
     @zone           = zone
     @plan           = plan
     @packetfilterid = packetfilterid
