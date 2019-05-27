@@ -3,7 +3,6 @@
 class SakuraServer
 
   require 'httpclient'
-  require 'pry'
 
   SAKURA_BASE_URL     = 'https://secure.sakura.ad.jp/cloud/zone'
   SAKURA_ZONE_ID      = 'is1b'
@@ -51,7 +50,6 @@ class SakuraServer
         :Description => @description, :Tags => @tags
       }
     }
-    binding.pry
     send_request('post','server', params)
   end
 
