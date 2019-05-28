@@ -66,6 +66,18 @@ class SakuraServer
     send_request('post', 'interface', params)
   end
 
+  #ネットワークインターフェイスの作成
+  def create_network_interface(params = nil)
+    params = {
+      :interface => {
+        :Server => {
+          :ID => @server_id
+        }
+      }
+    }
+    send_request('post', 'interface', params)
+  end
+
   # URI(エンドポイント)を作成する
   def create_endpoint(path)
     "#{SAKURA_BASE_URL}/#{SAKURA_ZONE_ID}/#{SAKURA_CLOUD_SUFFIX}/#{SAKURA_API_VERSION}/#{path}"
