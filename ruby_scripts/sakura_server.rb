@@ -107,7 +107,7 @@ class SakuraServer
       }
     end
     response    = send_request('post','disk',{:Disk => @disk})
-    @disk['id'] = response['disk']['id']
+    @disk[:id] = response['disk']['id']
 
     rescue => exception
       puts exception
@@ -122,6 +122,19 @@ class SakuraServer
 
     rescue => exception
       puts exception
+  end
+
+  def setup_ssh_key(params = nil)
+    body = { 
+      :SSHKey => {
+        :PublicKey => @pubkey
+      }
+    }
+    if @notes.empty?
+      body[:SSHKey][:PublicKey][:Notes] = @notes
+    end
+    response = send_request('put',"disk/#{@disk['id']}/config",body)
+    ....
   end
 
   # URI(エンドポイント)を作成する
