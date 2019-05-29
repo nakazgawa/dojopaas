@@ -75,6 +75,14 @@ class SakuraServer
     @interface_id = response['interfaceId']
   end
 
+  #パケットフィルターを適用
+  def apply_packet_filter(params = nil)
+    @interface_id     ||= params['interface_id']
+    @packet_filter_id ||= params['packet_filter_id']
+    response      = send_request('put', "interface/#{interface_id}/to/packetfilter/#{@packet_filter_id}",nil)
+    @server_id    = response['serverId']
+  end
+
   # URI(エンドポイント)を作成する
   def create_endpoint(path)
     "#{SAKURA_BASE_URL}/#{SAKURA_ZONE_ID}/#{SAKURA_CLOUD_SUFFIX}/#{SAKURA_API_VERSION}/#{path}"
