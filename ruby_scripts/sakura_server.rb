@@ -14,7 +14,7 @@ class SakuraServer
 
   # jsのserver.createで使っているフィールドを参考
   def initialize(zone:0, plan:nil, packetfilterid:nil, name:nil, description:nil, 
-                 tags:nil, pubkey:nil, disk:nil, resolve:nil, notes:nil)
+                 tags:nil, pubkey:nil, disk:{}, resolve:nil, notes:nil)
     @zone           = zone
     @plan           = plan
     @packetfilterid = packetfilterid
@@ -81,6 +81,21 @@ class SakuraServer
     @packet_filter_id ||= params['packet_filter_id']
     response      = send_request('put', "interface/#{interface_id}/to/packetfilter/#{@packet_filter_id}",nil)
     @server_id    = response['serverId']
+  end
+
+  def create_a_disk(params = nil)
+    if @disk.empty?
+      @disk = params['disk']
+    else
+      @disk = {
+        :Zone => { :ID => @zone}, 
+        :Name => @name,
+        :Description => @description
+      }
+    end
+
+    response    = send_request('post','disk',{:Disk => @disk})
+    @disk['id'] = response['disk']['id']
   end
 
   # URI(エンドポイント)を作成する
