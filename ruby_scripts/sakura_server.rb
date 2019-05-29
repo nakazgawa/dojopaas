@@ -46,12 +46,12 @@ class SakuraServer
     puts "Create a server for #{@name}."
     params = {
       :Server => {
-        :Zone => @zone, :ServerPlan => @plan, :Name => @name,
+        :Zone        => @zone,        :ServerPlan => @plan, :Name => @name,
         :Description => @description, :Tags => @tags
       }
     }
-    result = send_request('post','server', params)
-    @server_id =  ''
+    response   = send_request('post','server', params)
+    @server_id = response['server']['id']
   end
 
   #ネットワークインターフェイスの作成
