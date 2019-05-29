@@ -66,16 +66,12 @@ class SakuraServer
     send_request('post', 'interface', params)
   end
 
-  #ネットワークインターフェイスの作成
-  def create_network_interface(params = nil)
-    params = {
-      :interface => {
-        :Server => {
-          :ID => @server_id
-        }
-      }
-    }
-    send_request('post', 'interface', params)
+  #ネットワークインターフェイスの接続
+  def connect_network_interface(params = nil)
+    @interface_id ||= params['interface_id']
+    response      = send_request('put', "interface/#{interface_id}/to/switch/shared",nil)
+    @server_id    = response['serverId']
+    @interface_id = response['interfaceId']
   end
 
   # URI(エンドポイント)を作成する
