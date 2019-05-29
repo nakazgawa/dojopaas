@@ -52,6 +52,9 @@ class SakuraServer
     }
     response   = send_request('post','server', params)
     @server_id = response['server']['id']
+
+    rescue => exception
+      puts exception
   end
 
   #ネットワークインターフェイスの作成
@@ -65,6 +68,9 @@ class SakuraServer
     }
     response      = send_request('post', 'interface', params)
     @interface_id = response['interface']['id']
+
+    rescue => exception
+      puts exception
   end
 
   #ネットワークインターフェイスの接続
@@ -73,6 +79,9 @@ class SakuraServer
     response      = send_request('put', "interface/#{interface_id}/to/switch/shared",nil)
     @server_id    = response['serverId']
     @interface_id = response['interfaceId']
+
+    rescue => exception
+      puts exception
   end
 
   #パケットフィルターを適用
@@ -81,6 +90,9 @@ class SakuraServer
     @packet_filter_id ||= params['packet_filter_id']
     response      = send_request('put', "interface/#{interface_id}/to/packetfilter/#{@packet_filter_id}",nil)
     @server_id    = response['serverId']
+
+    rescue => exception
+      puts exception
   end
 
   def create_a_disk(params = nil)
@@ -93,9 +105,12 @@ class SakuraServer
         :Description => @description
       }
     end
-
     response    = send_request('post','disk',{:Disk => @disk})
     @disk['id'] = response['disk']['id']
+
+    rescue => exception
+      puts exception
+      puts 'Can not create a disk.'
   end
 
   # URI(エンドポイント)を作成する
@@ -107,7 +122,7 @@ class SakuraServer
   def send_request(http_method,path,query)
     endpoint = create_endpoint(path)
     response = @client.send(http_method,endpoint,:query => query)
-    response.body.empty? ? raise : response.body
+    response.body.empty? ? raise "Can not send #{http_method} request.": response.body
   end
 end
 
