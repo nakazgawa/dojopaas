@@ -95,6 +95,7 @@ class SakuraServer
       puts exception
   end
 
+  # ディスク作成
   def create_a_disk(params = nil)
     if @disk.empty?
       @disk = params['disk']
@@ -111,6 +112,16 @@ class SakuraServer
     rescue => exception
       puts exception
       puts 'Can not create a disk.'
+  end
+
+  def disk_connection(params = nil)
+    if @disk.empty?
+      @disk = params['disk']
+    end
+    response = send_request('put',"disk/#{@disk['id']}/to/server/#{@server_id}",nil)
+
+    rescue => exception
+      puts exception
   end
 
   # URI(エンドポイント)を作成する
