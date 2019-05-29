@@ -82,8 +82,8 @@ class SakuraServer
   # 実際に送信する
   def send_request(http_method,path,query)
     endpoint = create_endpoint(path)
-    receive_obj = @client.send(http_method,endpoint,:query => query)
-    receive_obj.body.empty? ? raise : receive_obj.body
+    response = @client.send(http_method,endpoint,:query => query)
+    response.body.empty? ? raise : response.body
   end
 end
 
