@@ -63,7 +63,8 @@ class SakuraServer
         }
       }
     }
-    send_request('post', 'interface', params)
+    response      = send_request('post', 'interface', params)
+    @interface_id = response['interface']['id']
   end
 
   #ネットワークインターフェイスの接続
