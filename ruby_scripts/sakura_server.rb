@@ -125,16 +125,27 @@ class SakuraServer
   end
 
   def setup_ssh_key(params = nil)
+    put_ssh_key()
+    _copying_image()
+  end
+
+  def _put_ssh_key
     body = { 
       :SSHKey => {
         :PublicKey => @pubkey
       }
     }
-    if @notes.empty?
-      body[:SSHKey][:PublicKey][:Notes] = @notes
+    if !@notes.empty?
+      body[:SSHKey][:Notes] = @notes
     end
-    response = send_request('put',"disk/#{@disk['id']}/config",body)
-    ....
+    send_request('put',"disk/#{@disk['id']}/config",body)
+  end
+
+  def _copying_image
+    send_request('put',"server/#{@server_id}/power")
+
+    rescue => exception
+      puts exception
   end
 
   # URI(エンドポイント)を作成する
@@ -146,7 +157,11 @@ class SakuraServer
   def send_request(http_method,path,query)
     endpoint = create_endpoint(path)
     response = @client.send(http_method,endpoint,:query => query)
-    response.body.empty? ? raise "Can not send #{http_method} request.": response.body
+    if response.body.empty?
+      raise "Can not send #{http_method} request."
+    else
+      response.body
+    end
   end
 end
 
